@@ -21,7 +21,8 @@ def auth_redirect():
         'code': request.args.get('code')
     })
     result = result.json()
-
+    from pprint import pprint
+    pprint(result)
     insert_user_query = """
             INSERT INTO users (
                     id,
