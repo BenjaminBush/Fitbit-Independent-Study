@@ -31,20 +31,22 @@ def auth_redirect():
     user = cur.fetchall()
 
     if len(user) > 0:
-        return jsonify({'data':'user_exists_error'})
-        
-    insert_user_query = """
-            INSERT INTO users (
-                    id,
-                    access_token,
-                    refresh_token
-                )
-            VALUES (%s, %s, %s)"""
-    cur.execute(insert_user_query, (
-        result['user_id'],
-        result['access_token'],
-        result['refresh_token']
-    ))
+        cur.execute("""
+                UPDATE users SET access_token = %s WHERE user_id = %s
+            """, (result['access_token'], result['user_id']))
+    else:
+        insert_user_query = """
+                INSERT INTO users (
+                        id,
+                        access_token,
+                        refresh_token
+                    )
+                VALUES (%s, %s, %s)"""
+        cur.execute(insert_user_query, (
+            result['user_id'],
+            result['access_token'],
+            result['refresh_token']
+        ))
 
     cur.close()
     return render_template('home.html')
