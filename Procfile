@@ -1,1 +1,1 @@
-web: gunicorn intraday:intraday
+web: gunicorn --log-file=- --pythonpath intraday intraday:intraday
