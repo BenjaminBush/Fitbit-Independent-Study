@@ -10,7 +10,7 @@ def home():
 
 @intraday.route('/auth_redirect')
 def auth_redirect():
-    cur = blitzkrieg.db.cursor()
+    cur = intraday.db.cursor()
 
     result = requests.post('https://api.fitbit.com/oauth2/token', data={
         'client_id': '227FD3',
@@ -23,8 +23,7 @@ def auth_redirect():
     result = result.json()
     print('result-json:' + result)
 
-
-    insert_instagram_user_query = """
+    insert_user_query = """
             INSERT INTO users (
                     id,
                     device_name,
@@ -32,7 +31,7 @@ def auth_redirect():
                     refresh_token
                 )
             VALUES (%s, %s, %s, %s)"""
-    cur.execute(insert_instagram_user_query, (
+    cur.execute(insert_user_query, (
         result['user_id'],
         result['access_token'],
         result['refresh_token']
