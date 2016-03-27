@@ -2,10 +2,10 @@ from flask import Flask, render_template, request, session, url_for, redirect, j
 from werkzeug.contrib.fixers import ProxyFix
 import requests, psycopg2
 
-from routes import views
-
 intraday = Flask(__name__)
 intraday.wsgi_app = ProxyFix(intraday.wsgi_app)
+
+from routes import views
 
 conn = psycopg2.connect("dbname='dc7qf7cii79rie' password='9yuoOs84Nr7k-r3H7ioZxVzPoV' user='qhazfngzupdgdj' host='ec2-54-83-22-48.compute-1.amazonaws.com' port='5432'");
 conn.autocommit = True
