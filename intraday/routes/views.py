@@ -24,8 +24,15 @@ def auth_redirect():
         'Content-Type': 'application/x-www-form-urlencoded'
     })
     result = result.json()
-    from pprint import pprint
-    pprint(result)
+
+    cur.execute("""
+            SELECT * FROM users WHERE id = %s
+        """, (result['user_id'],))
+    user = cur.fetchall()
+
+    if len(user) > 0:
+        return jsonify({'data':'user_exists_error'})
+        
     insert_user_query = """
             INSERT INTO users (
                     id,
