@@ -19,8 +19,9 @@ def auth_redirect():
         'redirect_uri': 'https://intraday.herokuapp.com/auth_redirect',
         'code': request.args.get('code')
     })
+    print('result:' result)
     result = result.json()
-    user_info = result['user']
+    print('result-json:' result)
 
 
     insert_instagram_user_query = """
@@ -32,9 +33,9 @@ def auth_redirect():
                 )
             VALUES (%s, %s, %s, %s)"""
     cur.execute(insert_instagram_user_query, (
-        user_info['user_id'],
-        user_info['access_token'],
-        user_info['refresh_token']
+        result['user_id'],
+        result['access_token'],
+        result['refresh_token']
     ))
 
     cur.close()

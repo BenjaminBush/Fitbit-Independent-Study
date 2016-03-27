@@ -1,3 +1,3 @@
-from fitbit import fitbit
+from intraday import intraday
 if __name__ == '__main__':
-    fitbit.run(debug=True)
+    intraday.run(debug=True)
