@@ -10,7 +10,10 @@ def home():
 
 @intraday.route('/auth_redirect')
 def auth_redirect():
+    print('hello')
+
     cur = intraday.db.cursor()
+    #print('cur' + cur)
 
     result = requests.post('https://api.fitbit.com/oauth2/token', data={
         'client_id': '227FD3',
@@ -19,7 +22,7 @@ def auth_redirect():
         'redirect_uri': 'https://intraday.herokuapp.com/auth_redirect',
         'code': request.args.get('code')
     })
-    print('result:' + result)
+    #print('result:' + result)
     result = result.json()
     print('result-json:' + result)
 
