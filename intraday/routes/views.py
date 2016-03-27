@@ -1,6 +1,6 @@
 from intraday import intraday
 from flask import render_template, request, session, url_for, redirect, jsonify
-import requests, psycopg2
+import requests, psycopg2, base64
 
 import fitbit
 
@@ -19,6 +19,9 @@ def auth_redirect():
         'grant_type': 'authorization_code',
         'redirect_uri': 'https://intraday.herokuapp.com/auth_redirect',
         'code': request.args.get('code')
+    }, headers={
+        'Authorization': b'Basic ' + base64.b64encode(('227FD3:5543280369ea955f96decf9e635c29f9').encode('utf8')),
+        'Content-Type': 'application/x-www-form-urlencoded'
     })
     result = result.json()
     from pprint import pprint
