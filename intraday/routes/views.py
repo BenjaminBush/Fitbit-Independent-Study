@@ -32,7 +32,7 @@ def auth_redirect():
 
     if len(user) > 0:
         cur.execute("""
-                UPDATE users SET access_token = %s WHERE user_id = %s
+                UPDATE users SET access_token = %s WHERE id = %s
             """, (result['access_token'], result['user_id']))
     else:
         insert_user_query = """
