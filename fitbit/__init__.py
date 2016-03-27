@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, session, url_for, redirect, j
 from werkzeug.contrib.fixers import ProxyFix
 import requests, psycopg2
 
+from routes import views
+
 intraday = Flask(__name__)
 intraday.wsgi_app = ProxyFix(intraday.wsgi_app)
 
