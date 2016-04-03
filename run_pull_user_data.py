@@ -8,3 +8,5 @@ def get_user():
     authd_client = fitbit.Fitbit('227FD3', '5543280369ea955f96decf9e635c29f9',
                                  access_token='<access_token>', refresh_token='<refresh_token>')
     authd_client.sleep()
+
+    #Reptar

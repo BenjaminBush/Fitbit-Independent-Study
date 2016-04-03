@@ -3,3 +3,7 @@ CREATE TABLE users (
     "access_token" text NOT NULL,
     "refresh_token" text NOT NULL,
 );
+
+CREATE TABLE loggables (
+  "id" varchar(500) 
+)
