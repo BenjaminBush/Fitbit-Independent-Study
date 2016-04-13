@@ -10,3 +10,18 @@ def get_user():
     authd_client.sleep()
 
     #Reptar
+
+    cur = conn.cursor()
+    #Get all of the information for a given user
+    cur.execute("""
+            SELECT * FROM users
+        """)
+    user = cur.fetchall()
+
+    ids = user['id']
+    access_tokens = user['access_token']
+    refresh_tokens = user['refresh_token']
+
+    hr = requests.get('https://api.fitbit.com/1/user/'+ids[0]+'/activities/heart/date/today/1d/1d/1sec/time/11:20/11:30.json')
+
+    hr = hr.json();

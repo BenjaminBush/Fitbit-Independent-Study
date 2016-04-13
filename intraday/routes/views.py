@@ -29,12 +29,12 @@ def auth_redirect():
             SELECT * FROM users WHERE id = %s
         """, (result['user_id'],))
     user = cur.fetchall()
-
+    #Refresh the tokens
     if len(user) > 0:
         cur.execute("""
                 UPDATE users SET access_token = %s WHERE id = %s
             """, (result['access_token'], result['user_id']))
-    else:
+    else: #Insert a new user
         insert_user_query = """
                 INSERT INTO users (
                         id,
