@@ -13,15 +13,15 @@ def get_user():
 
     cur = conn.cursor()
     #Get all of the information for a given user
+    #for each user, send the request to get all activity data + sleep + hr and store it in the db
+    #must make requst with access token as authorization header
     cur.execute("""
             SELECT * FROM users
         """)
-    user = cur.fetchall()
-
-    ids = user['id']
-    access_tokens = user['access_token']
-    refresh_tokens = user['refresh_token']
-
-    hr = requests.get('https://api.fitbit.com/1/user/'+ids[0]+'/activities/heart/date/today/1d/1d/1sec/time/11:20/11:30.json')
-
-    hr = hr.json();
+    users = cur.fetchall()
+    #For each user, get their data
+    for(user in users){
+        hr = requests.get('https://api.fitbit.com/1/user/'+user['id']+'/activities/heart/date/today/1d/1d/1sec/time/11:20/11:30.json', headers={'Authorization':user['access_token']})
+        hr = hr.json();
+        print(hr);
+    }
