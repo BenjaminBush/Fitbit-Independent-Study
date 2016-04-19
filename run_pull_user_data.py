@@ -20,8 +20,8 @@ def get_user():
         """)
     users = cur.fetchall()
     #For each user, get their data
-    for(user in users){
+    for(user in users):
         hr = requests.get('https://api.fitbit.com/1/user/'+user['id']+'/activities/heart/date/today/1d/1d/1sec/time/11:20/11:30.json', headers={'Authorization':user['access_token']})
         hr = hr.json();
         print(hr);
-    }
+    
