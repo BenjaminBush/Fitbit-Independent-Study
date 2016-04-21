@@ -18,11 +18,12 @@ def get_user():
     authd_client = fitbit.Fitbit('227FD3', '5543280369ea955f96decf9e635c29f9',
                                  access_token=ben_access_token, refresh_token=ben_refresh_token)
 
+    #Always refresh the token here so you don't run into authentication problems
 
     URLBASE = URLBASE = "%s/%s/user" % (fitbit.Fitbit.API_ENDPOINT, fitbit.Fitbit.API_VERSION)
 
     resource = "activities"
-    date = datetime.date(2016, 4, 18)
+    date = datetime.date(2016, 4, 20)
     user_id = ben_id
     data = None
     url = URLBASE + "/%s/%s.json" % (user_id, resource)
