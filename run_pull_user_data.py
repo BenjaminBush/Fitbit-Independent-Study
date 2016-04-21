@@ -1,4 +1,4 @@
-import requests, psycopg2
+import requests, psycopg2, base64
 
 conn = psycopg2.connect("dbname='dc7qf7cii79rie' password='9yuoOs84Nr7k-r3H7ioZxVzPoV' user='qhazfngzupdgdj' host='ec2-54-83-22-48.compute-1.amazonaws.com' port='5432'")
 conn.autocommit = True
@@ -9,18 +9,23 @@ def get_user():
                                  access_token='<access_token>', refresh_token='<refresh_token>')
     authd_client.sleep()
 
-    #Reptar
 
+def example():
     cur = conn.cursor()
-    #Get all of the information for a given user
-    #for each user, send the request to get all activity data + sleep + hr and store it in the db
-    #must make requst with access token as authorization header
     cur.execute("""
-            SELECT * FROM users
-        """)
-    users = cur.fetchall()
-    #For each user, get their data
+        SELECT id, access_token, refresh_token FROM users
+    """)
+    ben = cur.fetchall()
+    print(ben[0][0])
+    print(ben[0][1])
+    print(ben[0][2])
 
-    hr = requests.get('https://api.fitbit.com/1/user/'+user['id'][0]+'/activities/heart/date/today/1d/1d/1sec/time/11:20/11:30.json', headers={'Authorization':user['access_token']})
-    hr = hr.json();
-    print(hr);
+    url = 'https://api.fitbitcom/1/user/'+ben[0][0]+'/activities/date/[2016-03-19].json'
+
+    hr = requests.get(url)
+    import pdb; pdb.set_trace()
+    #except requests.exceptions.RequestException as e:
+    #    print(type(e))
+    #    print(e)
+
+example()
