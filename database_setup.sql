@@ -5,5 +5,7 @@ CREATE TABLE users (
 );
 
 CREATE TABLE loggables (
-  "id" varchar(500) 
+  "id" varchar(50) PRIMARY KEY,
+  "steps" ,
+   
 )
