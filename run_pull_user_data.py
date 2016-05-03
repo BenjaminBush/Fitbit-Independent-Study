@@ -18,17 +18,20 @@ def get_user():
         user_id = users[i][0]
         user_access_token = users[i][1]
         user_refresh_token = users[i][2]
+
         #Always refresh the token here so you don't run into authentication problems
-        result = requests.post('https://api.fitbit.com/oauth2/token', data={
-            'grant_type': 'refresh_token',
-            'refresh_token': user_refresh_token
-        }, headers={
-            'Authorization': b'Basic ' + base64.b64encode(('227FD3:5543280369ea955f96decf9e635c29f9').encode('utf8')),
-            'Content-Type': 'application/x-www-form-urlencoded'
-        })
+        #result = requests.post('https://api.fitbit.com/oauth2/token', data={
+        #    'grant_type': 'refresh_token',
+        #    'refresh_token': user_refresh_token
+        #}, headers={
+        #    'Authorization': b'Basic ' + base64.b64encode(('227FD3:5543280369ea955f96decf9e635c29f9').encode('utf8')),
+    #        'Content-Type': 'application/x-www-form-urlencoded'
+    #    })
         #Turn the result into JSON
-        result = result.json()
+    #    result = result.json()
+    #    print result
         #Must store the new access + refresh tokens in the database since they are only good once
+
 #        cur.execute("""
 #                UPDATE users SET access_token = %s, refresh_token = %s WHERE id = %s
 #            """, (result['access_token'], result['refresh_token'], result['user_id']))
@@ -62,7 +65,6 @@ def get_user():
             restinghr = data['summary']['restingHeartRate']
         except KeyError:
             restinghr = 0
-
 
         #Create the query
         insert_user_query = """

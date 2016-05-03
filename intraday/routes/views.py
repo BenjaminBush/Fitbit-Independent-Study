@@ -51,4 +51,4 @@ def auth_redirect():
 
     cur.close()
     #Go back to the homepage
-    return render_template('home.html')
+    return render_template('success.html')
