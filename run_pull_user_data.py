@@ -15,19 +15,34 @@ def get_user():
     users = cur.fetchall()
 
 
-
-    user_id = users[2][0]
-    user_access_token = users[2][1]
-    user_refresh_token = users[2][2]
-
+    user_id = users[0][0]
+    user_access_token = users[0][1]
+    user_refresh_token = users[0][2]
     #Always refresh the token here so you don't run into authentication problems
-    #reptar = fitbit.FitbitOauth2Client(clientId, clientSecret,
-    #                             access_token=user_access_token, refresh_token=user_refresh_token)
+    result = requests.post('https://api.fitbit.com/oauth2/token', data={
+        'grant_type': 'refresh_token',
+        'refresh_token': user_refresh_token
+    }, headers={
+        'Authorization': b'Basic ' + base64.b64encode(('227FD3:5543280369ea955f96decf9e635c29f9').encode('utf8')),
+        'Content-Type': 'application/x-www-form-urlencoded'
+    })
+    #Turn the result into JSON
+    result = result.json()
+    
+    #Must store the new access + refresh tokens in the database since they are only good once
 
-#    reptar.refresh_token()
+    cur.execute("""
+            UPDATE users SET access_token = %s, refresh_token = %s WHERE id = %s
+        """, (result['access_token'], result['refresh_token'], result['user_id']))
+
+    #Get the updated information
+    cur.execute("""
+            SELECT id, access_token, refresh_token FROM users
+        """)
+    users = cur.fetchall()
+
     authd_client = fitbit.Fitbit(clientId, clientSecret,
                                  access_token=user_access_token, refresh_token=user_refresh_token)
-
 
     URLBASE = URLBASE = "%s/%s/user" % (fitbit.Fitbit.API_ENDPOINT, fitbit.Fitbit.API_VERSION)
     resource = "activities"
@@ -36,6 +51,25 @@ def get_user():
     data = None
     url = URLBASE + "/%s/%s.json" % (user_id, resource)
     data = fitbit.Fitbit._COLLECTION_RESOURCE(authd_client, resource, date, user_id, data)
-    print data
+
+    insert_user_query = """
+            INSERT INTO loggables (
+                    id,
+                    distance,
+                    caloriesOut,
+                    floors,
+                    steps,
+                    restingHeartRate
+                )
+            VALUES (%s, %s, %s, %s, %s, %s)"""
+
+    cur.execute(insert_user_query, (
+        data['summary']['distances']['distance'],
+        data['summary']['caloriesOut'],
+        data['summary']['floors'],
+        data['summary']['steps'],
+        data['summary']['restingHeartRate']
+    ))
+
 
 get_user()
