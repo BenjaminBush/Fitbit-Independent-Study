@@ -5,10 +5,12 @@ CREATE TABLE users (
 );
 
 CREATE TABLE loggables (
-  "id" varchar(50) PRIMARY KEY,
-  "distance" smallint,
-  "caloriesOut" smallint,
+  "cnt" serial primary key,
+  "id" varchar(50),
+  "distance" decimal,
   "floors" smallint,
   "steps" smallint,
-  "restingHeartRate" smallint
+  "restinghr" smallint,
+  "calsout" smallint,
+  "day" date
 );

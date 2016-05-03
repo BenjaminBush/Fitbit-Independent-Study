@@ -28,9 +28,8 @@ def get_user():
     })
     #Turn the result into JSON
     result = result.json()
-    
-    #Must store the new access + refresh tokens in the database since they are only good once
 
+    #Must store the new access + refresh tokens in the database since they are only good once
     cur.execute("""
             UPDATE users SET access_token = %s, refresh_token = %s WHERE id = %s
         """, (result['access_token'], result['refresh_token'], result['user_id']))
@@ -41,35 +40,53 @@ def get_user():
         """)
     users = cur.fetchall()
 
+    #Use the api to get the resources
     authd_client = fitbit.Fitbit(clientId, clientSecret,
                                  access_token=user_access_token, refresh_token=user_refresh_token)
 
     URLBASE = URLBASE = "%s/%s/user" % (fitbit.Fitbit.API_ENDPOINT, fitbit.Fitbit.API_VERSION)
     resource = "activities"
-    date = datetime.date(2016, 4, 22)
+    date = datetime.datetime.today().strftime("%Y-%m-%d")
     user_id = user_id
     data = None
     url = URLBASE + "/%s/%s.json" % (user_id, resource)
     data = fitbit.Fitbit._COLLECTION_RESOURCE(authd_client, resource, date, user_id, data)
 
+    #Store the important data in local variables
+    distance = data['summary']['distances'][1]['distance']
+    floors = data['summary']['floors']
+    steps = data['summary']['steps']
+    calsout = data['summary']['caloriesOut']
+
+    try:
+        restinghr = data['summary']['restingHeartRate']
+    except KeyError:
+        restinghr = 0
+
+
+    #Create the query
     insert_user_query = """
             INSERT INTO loggables (
                     id,
                     distance,
-                    caloriesOut,
                     floors,
                     steps,
-                    restingHeartRate
+                    restinghr,
+                    calsout,
+                    day
                 )
-            VALUES (%s, %s, %s, %s, %s, %s)"""
+            VALUES (%s, %s, %s, %s, %s, %s, %s)"""
 
+    #Insert into the table
     cur.execute(insert_user_query, (
-        data['summary']['distances']['distance'],
-        data['summary']['caloriesOut'],
-        data['summary']['floors'],
-        data['summary']['steps'],
-        data['summary']['restingHeartRate']
+        user_id,
+        distance,
+        floors,
+        steps,
+        restinghr,
+        calsout,
+        date
     ))
 
-
+#Call the function!
 get_user()
