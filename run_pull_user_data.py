@@ -47,6 +47,7 @@ def get_user():
 
     #Refresh the token here just so we don't run into any problems
     token = authd_client.client.refresh_token()
+    import pdb; pdb.set_trace()
     user_access_token = token['access_token']
     user_refresh_token = token['refresh_token']
 
