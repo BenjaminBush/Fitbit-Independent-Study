@@ -46,10 +46,20 @@ def get_user():
 
 
     #Refresh the token here just so we don't run into any problems
-    token = authd_client.client.refresh_token()
+    result = requests.post('https://api.fitbit.com/oauth2/token', data={
+        'grant_type': 'refresh_token',
+        'refresh_token': user_refresh_token
+    }, headers={
+        'Authorization': b'Basic ' + base64.b64encode(('227FD3:5543280369ea955f96decf9e635c29f9').encode('utf8')),
+        'Content-Type': 'application/x-www-form-urlencoded'
+    })
     import pdb; pdb.set_trace()
-    user_access_token = token['access_token']
-    user_refresh_token = token['refresh_token']
+
+    if result['success']:
+        user_access_token = result['access_token']
+        user_refresh_token = result['refresh_token']
+
+    print result
 
     cur.execute("""
             UPDATE users SET access_token = %s, refresh_token = %s WHERE id = %s
