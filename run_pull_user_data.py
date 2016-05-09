@@ -7,13 +7,13 @@ def get_user():
     #Store the id and secret for future reference
     clientId = '227FD3'
     clientSecret = '5543280369ea955f96decf9e635c29f9'
-
+    #Connect to the database and get all user information
     cur = conn.cursor()
     cur.execute("""
         SELECT id, access_token, refresh_token FROM users
     """)
     users = cur.fetchall()
-
+    #Iterate over each user in the databae
     for user in users:
         user_id = user[0]
         user_access_token = user[1]
@@ -24,7 +24,7 @@ def get_user():
                                      access_token=user_access_token, refresh_token=user_refresh_token)
 
 
-        #Refresh the token here just so we don't run into any problems
+        #Refresh the token here just so we don't run into any problems (every time)
         result = requests.post('https://api.fitbit.com/oauth2/token', data={
             'grant_type': 'refresh_token',
             'refresh_token': user_refresh_token
@@ -32,17 +32,17 @@ def get_user():
             'Authorization': b'Basic ' + base64.b64encode(('227FD3:5543280369ea955f96decf9e635c29f9').encode('utf8')),
             'Content-Type': 'application/x-www-form-urlencoded'
         })
-
+        #JSONify the response
         json_response = json.loads(result.content)
 
-        print json_response
-
+        #If errors exist, fail. Otherwise continue
+        #Note: if one user fails, the app will continue to execute for other users!
         if 'errors' in json_response:
             print(user_id + ': failed miserably')
         else:
+            #Update the database with the new tokens
             user_access_token = json_response['access_token']
             user_refresh_token = json_response['refresh_token']
-
             cur.execute("""
                     UPDATE users SET access_token = %s, refresh_token = %s WHERE id = %s
                 """, (user_access_token, user_refresh_token, user_id))
@@ -62,7 +62,7 @@ def get_user():
             floors = data['summary']['floors']
             steps = data['summary']['steps']
             calsout = data['summary']['caloriesOut']
-
+            #Check to see if there is hr data
             try:
                 restinghr = data['summary']['restingHeartRate']
             except KeyError:
@@ -91,7 +91,7 @@ def get_user():
                 calsout,
                 date
             ))
-
+    #Close connection to the database
     cur.close()
 
 
