@@ -38,7 +38,7 @@ def get_user():
         print json_response
 
         if 'errors' in json_response:
-            print('failed miserably')
+            print(user_id + ': failed miserably')
         else:
             user_access_token = json_response['access_token']
             user_refresh_token = json_response['refresh_token']
