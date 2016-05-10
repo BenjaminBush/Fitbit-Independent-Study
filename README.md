@@ -15,7 +15,7 @@ Flask (0.10.1)
 psycopg2 (2.6.1)
 gunicorn (19.1.1)
 requests (2.5.1)
-requests-oauthlib (0.6.3)
+requests-oauthlib (0.6.1)
 python-dateutil (2.4.0)
 fitbit (0.2.2)
 
