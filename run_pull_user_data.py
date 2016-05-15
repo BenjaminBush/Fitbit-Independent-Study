@@ -1,6 +1,6 @@
 import requests, psycopg2, base64, fitbit, datetime, json
 #Connect to the databases using psycopg2
-conn = psycopg2.connect("dbname='dc7qf7cii79rie' password='9yuoOs84Nr7k-r3H7ioZxVzPoV' user='qhazfngzupdgdj' host='ec2-54-83-22-48.compute-1.amazonaws.com' port='5432'")
+conn = psycopg2.connect() #Enter database information here
 conn.autocommit = True
 
 def get_user():
